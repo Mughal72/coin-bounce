@@ -5,6 +5,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import styles from "./App.module.css";
 import Protected from "./components/Protected/Protected";
 import Error from "./pages/Error/Error";
+import Login from "./pages/Login/Login";
+
+
 function App() {
   const isAuth = true;
   return (
@@ -55,7 +58,7 @@ function App() {
             <Route
               path="login"
               exact
-              element={<div className={styles.main}>Log in Page</div>}
+              element={<div className={styles.main}><Login /></div>}
             />
 
             <Route 
