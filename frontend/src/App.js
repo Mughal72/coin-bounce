@@ -11,6 +11,7 @@ import Signup from "./pages/Signup/Signup";
 import Crypto from "./pages/Crypto/Crypto";
 import Blog from "./pages/Blog/Blog";
 import SubmitBlog from "./pages/SubmitBlog/SubmitBlog";
+import BlogDetails from "./pages/BlogDetails/BlogDetails";
 
 function App() {
   const isAuth = useSelector(state => state.user.auth);
@@ -42,6 +43,17 @@ function App() {
               element={
                 <Protected isAuth={isAuth}>
                   <div className={styles.main}><Blog /></div>
+                </Protected>
+              }
+            />
+            <Route
+              path="blog/:id"
+              exact
+              element={
+                <Protected isAuth={isAuth}>
+                  <div className={styles.main}>
+                    <BlogDetails />
+                  </div>
                 </Protected>
               }
             />
