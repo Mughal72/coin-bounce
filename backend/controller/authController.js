@@ -86,8 +86,8 @@ const authController = {
     // send tokens in cookie
     res.cookie("accessToken", accessToken, {
       maxAge: 1000 * 60 * 60 * 24,
-      httpOnly: true,   //client side js can't access it only we can access it when refreshtoken comes in our backend
-    });       
+      httpOnly: true,
+    });
 
     res.cookie("refreshToken", refreshToken, {
       maxAge: 1000 * 60 * 60 * 24,
@@ -165,7 +165,7 @@ const authController = {
           _id: user._id,
         },
         { token: refreshToken },
-        { upsert: true } //if matching record find then update it
+        { upsert: true }
       );
     } catch (error) {
       return next(error);

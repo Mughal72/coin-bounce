@@ -1,21 +1,36 @@
 const Joi = require("joi");
 const fs = require("fs");
-const blog = require("../models/blog");
-const { BACKEND_SERVER_PATH } = require("../config/index");
+const Blog = require("../models/blog");
+const {
+  BACKEND_SERVER_PATH,
+  CLOUD_NAME,
+  API_SECRET,
+  API_KEY,
+} = require("../config/index");
 const BlogDTO = require("../dto/blog");
 const BlogDetailsDTO = require("../dto/blog-details");
-const Comment = require('../models/comment')
+const Comment = require("../models/comment");
+
+const cloudinary = require("cloudinary").v2;
+
+// Configuration
+cloudinary.config({
+  cloud_name: CLOUD_NAME,
+  api_key: API_KEY,
+  api_secret: API_SECRET,
+});
 
 const mongodbIdPattern = /^[0-9a-fA-F]{24}$/;
 
 const blogController = {
   async create(req, res, next) {
-    //1. validate req body
-    //2. handle photo storage, naming etc
-    //3. add to db
+    // 1. validate req body
+    // 2. handle photo storage, naming
+    // 3. add to db
     // 4. return response
 
-    // client side -> based encoded string -> decode-> store -> save photos path in  db
+    // client side -> base64 encoded string -> decode -> store -> save photo's path in db
+
     const createBlogSchema = Joi.object({
       title: Joi.string().required(),
       author: Joi.string().regex(mongodbIdPattern).required(),
@@ -31,29 +46,33 @@ const blogController = {
 
     const { title, author, content, photo } = req.body;
 
-    //read as buffer
-    const buffer = Buffer.from(
-      photo.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""),
-      "base64"
-    );
-    //  allot a random name
-    const imagePath = `${Date.now()}-${author}.png`;
+    // read as buffer
+    // const buffer = Buffer.from(
+    //   photo.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""),
+    //   "base64"
+    // );
 
-    // save locally
+    // allot a random name
+    // const imagePath = `${Date.now()}-${author}.png`;
+
+    // save to cloudinary
+    let response;
+
     try {
-      fs.writeFileSync(`storage/${imagePath}`, buffer);
+      response = await cloudinary.uploader.upload(photo);
+      // fs.writeFileSync(`storage/${imagePath}`, buffer);
     } catch (error) {
       return next(error);
     }
 
-    let newBlog;
     // save blog in db
+    let newBlog;
     try {
       newBlog = new Blog({
         title,
-        auhtor,
+        author,
         content,
-        photoPath: `${BACKEND_SERVER_PATH}/storage/${imagePath}`,
+        photoPath: response.url,
       });
 
       await newBlog.save();
@@ -62,6 +81,7 @@ const blogController = {
     }
 
     const blogDto = new BlogDTO(newBlog);
+
     return res.status(201).json({ blog: blogDto });
   },
   async getAll(req, res, next) {
@@ -81,8 +101,8 @@ const blogController = {
     }
   },
   async getById(req, res, next) {
-    //   validate id
-    //  response
+    // validate id
+    // response
 
     const getByIdSchema = Joi.object({
       id: Joi.string().regex(mongodbIdPattern).required(),
@@ -110,6 +130,8 @@ const blogController = {
   },
   async update(req, res, next) {
     // validate
+    //
+
     const updateBlogSchema = Joi.object({
       title: Joi.string().required(),
       content: Joi.string().required(),
@@ -126,8 +148,9 @@ const blogController = {
     // save new photo
 
     let blog;
+
     try {
-      const blog = await Blog.findOne({ _id: blogId });
+      blog = await Blog.findOne({ _id: blogId });
     } catch (error) {
       return next(error);
     }
@@ -135,19 +158,19 @@ const blogController = {
     if (photo) {
       let previousPhoto = blog.photoPath;
 
-      previousPhoto = previousPhoto.split("/") - at(-1); //123124.png
+      previousPhoto = previousPhoto.split("/").at(-1);
 
-      //delete photo
+      // delete photo
       fs.unlinkSync(`storage/${previousPhoto}`);
 
       // read as buffer
-      const buffer = Buffer.from(
-        photo.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""),
-        "base64"
-      );
+      // const buffer = Buffer.from(
+      //   photo.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""),
+      //   "base64"
+      // );
 
-      //   allot a random name
-      const imagePath = `${Date.now()}-${author}.png`;
+      // allot a random name
+      // const imagePath = `${Date.now()}-${author}.png`;
 
       // save locally
       let response;
@@ -157,22 +180,21 @@ const blogController = {
       } catch (error) {
         return next(error);
       }
+
       await Blog.updateOne(
         { _id: blogId },
         {
           title,
           content,
-          photoPath: `${BACKEND_SERVER_PATH}/storage/${imagePath}`
+          photoPath: response.url,
         }
       );
+    } else {
+      await Blog.updateOne({ _id: blogId }, { title, content });
     }
-    else{
-        await Blog.updateOne({_id: blogId}, {title, content});
-    }
-    return res.status(200).json({message: 'blog updated!'});
+
+    return res.status(200).json({ message: "blog updated!" });
   },
-
-
   async delete(req, res, next) {
     // validate id
     // delete blog
@@ -198,7 +220,6 @@ const blogController = {
 
     return res.status(200).json({ message: "blog deleted" });
   },
-
 };
 
 module.exports = blogController;
