@@ -94,7 +94,7 @@ function Login() {
           Register
         </button>
       </span>
-      {error !== "" ? <p className={styles.errorMessage}>{error}</p> : ""}
+      {error != "" ? <p className={styles.errorMessage}>{error}</p> : ""}
     </div>
   );
 }

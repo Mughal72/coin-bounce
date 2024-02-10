@@ -93,7 +93,7 @@ function UpdateBlog() {
           accept="image/jpg, image/jpeg, image/png"
           onChange={getPhoto}
         />
-        <img src={photo} width={150} height={150}  alt=""/>
+        <img src={photo} width={150} height={150} />
       </div>
       <button className={styles.update} onClick={updateHandler}>
         Update

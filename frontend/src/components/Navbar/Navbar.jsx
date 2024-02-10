@@ -1,20 +1,19 @@
 import { NavLink } from "react-router-dom";
 import styles from "./Navbar.module.css";
-import {  useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { signout } from "../../api/internal";
 import { resetUser } from "../../store/userSlice";
-import { UseDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function Navbar() {
-    
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector(state => state.user.auth);
 
-  const handleSignout =  async() =>{
-     await signout();
-     dispatch(resetUser())
+  const isAuthenticated = useSelector((state) => state.user.auth);
 
-  } 
+  const handleSignout = async () => {
+    await signout();
+    dispatch(resetUser());
+  };
 
   return (
     <>
@@ -93,6 +92,5 @@ function Navbar() {
     </>
   );
 }
-
 
 export default Navbar;

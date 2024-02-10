@@ -123,38 +123,38 @@ export const updateBlog = async (data) => {
   return response;
 };
 
-// // auto token refresh
+// auto token refresh
 
-// // /protected-resource -> 401
-// // /refresh -> authenthicated state
-// // /protected-resource
+// /protected-resource -> 401
+// /refresh -> authenthicated state
+// /protected-resource
 
-// api.interceptors.response.use(
-//   (config) => config,
-//   async (error) => {
-//     const originalReq = error.config;
+api.interceptors.response.use(
+  (config) => config,
+  async (error) => {
+    const originalReq = error.config;
 
-//     // extract the value of message from json response if it exists
-//     const errorMessage = error.response && error.response.data && error.response.data.message;
+    // extract the value of message from json response if it exists
+    const errorMessage = error.response && error.response.data && error.response.data.message;
 
-//     if (
-//       errorMessage === 'Unauthorized' &&
-// 			(error.response.status === 401 || error.response.status === 500) &&
-// 			originalReq &&
-// 			!originalReq._isRetry
-//     ) {
-//       originalReq._isRetry = true;
+    if (
+      errorMessage === 'Unauthorized' &&
+			(error.response.status === 401 || error.response.status === 500) &&
+			originalReq &&
+			!originalReq._isRetry
+    ) {
+      originalReq._isRetry = true;
 
-//       try {
-//         await axios.get(`${process.env.REACT_APP_INTERNAL_API_PATH}/refresh`, {
-//           withCredentials: true,
-//         });
+      try {
+        await axios.get(`${process.env.REACT_APP_INTERNAL_API_PATH}/refresh`, {
+          withCredentials: true,
+        });
 
-//         return api.request(originalReq);
-//       } catch (error) {
-//         return error;
-//       }
-//     }
-//     throw error;
-//   }
-// );
+        return api.request(originalReq);
+      } catch (error) {
+        return error;
+      }
+    }
+    throw error;
+  }
+);
