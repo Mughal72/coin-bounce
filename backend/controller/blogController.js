@@ -11,7 +11,8 @@ const BlogDTO = require("../dto/blog");
 const BlogDetailsDTO = require("../dto/blog-details");
 const Comment = require("../models/comment");
 
-import {v2 as cloudinary} from 'cloudinary';
+const cloudinary = require('cloudinary').v2;
+
 
 cloudinary.config({ 
   cloud_name: CLOUD_NAME, 
