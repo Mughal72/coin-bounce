@@ -19,13 +19,13 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      return callback(null, true);
-    },
-    optionsSuccessStatus: 200,
-    credentials: true,
+    origin: "http://localhost:3000", // Allow only requests from this origin
+    methods: ["GET", "POST", "PUT", "DELETE"], // Specify the allowed HTTP methods
+    credentials: true, // Allow cookies and authorization headers
+    optionsSuccessStatus: 200, // Respond with a 200 status for preflight requests
   })
 );
+
 
 app.use(express.json({ limit: "50mb" }));
 
