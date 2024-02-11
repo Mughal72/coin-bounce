@@ -141,7 +141,7 @@ function Signup() {
         </button>
       </span>
 
-      {error !== "" ? <p className={styles.errorMessage}>{error}</p> : ""}
+      {error != "" ? <p className={styles.errorMessage}>{error}</p> : ""}
     </div>
   );
 }

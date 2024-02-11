@@ -20,7 +20,7 @@ function Home() {
     window.open(url, "_blank");
   };
 
-  if (articles.length === 0) {
+  if (articles.length == 0) {
     return <Loader text="homepage" />;
   }
 
@@ -34,7 +34,7 @@ function Home() {
             key={article.url}
             onClick={() => handleCardClick(article.url)}
           >
-            <img src={article.urlToImage} alt=""/>
+            <img src={article.urlToImage} />
             <h3>{article.title}</h3>
           </div>
         ))}

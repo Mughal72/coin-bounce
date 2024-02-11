@@ -13,16 +13,17 @@ import Blog from "./pages/Blog/Blog";
 import SubmitBlog from "./pages/SubmitBlog/SubmitBlog";
 import BlogDetails from "./pages/BlogDetails/BlogDetails";
 import UpdateBlog from "./pages/UpdateBlog/UpdateBlog";
-require('dotenv').config();
-
-
+import useAutoLogin from "./hooks/useAutoLogin";
+import Loader from "./components/Loader/Loader";
 
 function App() {
   const isAuth = useSelector((state) => state.user.auth);
 
- 
-  return  (
- 
+  const loading = useAutoLogin();
+
+  return loading ? (
+    <Loader text="..." />
+  ) : (
     <div className={styles.container}>
       <BrowserRouter>
         <div className={styles.layout}>

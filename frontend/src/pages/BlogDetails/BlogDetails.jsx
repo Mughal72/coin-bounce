@@ -42,7 +42,7 @@ function BlogDetails() {
       }
     }
     getBlogDetails();
-  }, [blogId, reload, username]);
+  }, [reload]);
 
   const postCommentHandler = async () => {
     const data = {
@@ -84,7 +84,7 @@ function BlogDetails() {
           </p>
         </div>
         <div className={styles.photo}>
-          <img src={blog.photo} width={250} height={250} alt="" />
+          <img src={blog.photo} width={250} height={250} />
         </div>
         <p className={styles.content}>{blog.content}</p>
         {ownsBlog && (
