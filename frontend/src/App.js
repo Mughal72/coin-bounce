@@ -13,6 +13,7 @@ import Blog from "./pages/Blog/Blog";
 import SubmitBlog from "./pages/SubmitBlog/SubmitBlog";
 import BlogDetails from "./pages/BlogDetails/BlogDetails";
 import UpdateBlog from "./pages/UpdateBlog/UpdateBlog";
+require('dotenv').config();
 
 
 

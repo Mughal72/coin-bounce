@@ -5,6 +5,8 @@ const router = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandler");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+require('dotenv').config();
+
 
 // const corsOptions = {
 //   credentials: true,
